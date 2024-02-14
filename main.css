@@ -1,0 +1,8 @@
+#mol-lander-game {
+  margin: 0;
+  /* margin: 20px; */
+  display: flex;
+  /* justify-content: center; */
+  justify-content: left;
+  align-items: center;
+}
