@@ -36,7 +36,30 @@ function presynapticNeuron() {
   noStroke();
   // presynaptic neuron
   fill(107, 171, 205);
-  rect(0, 175, 150, 250);
+  beginShape();
+  vertex(0, 250);
+  bezierVertex(0, 240, 50, 270, 50, 250);
+  bezierVertex(50, 270, 70, 40, 155, 205);
+  bezierVertex(180, 260, 180, 340, 155, 395);
+  bezierVertex(70, 560, 50, 330, 50, 350);
+  bezierVertex(50, 330, 0, 360, 0, 350);
+  endShape(CLOSE);
+  // synaptic vesicle
+  fill(25, 25, 25);
+  ellipse(145, 225, 80);
+  ellipse(120, 350, 80);
+  // static molecule
+  //molecule
+  push();
+  stroke(0, 0, 0);
+  strokeWeight(1);
+  fill(255, 0, 0);
+  rectMode(CENTER);
+  rect(120, 350, moleculeWidth, moleculeHeight);
+  fill(0, 0, 255);
+  ellipse(120 - 5, 350 - 15, 5);
+  ellipse(120 - 5, 350 + 15, 5);
+  pop();
   pop();
 }
 
@@ -45,7 +68,14 @@ function postsynapticNeuron() {
   noStroke();
   // postsynaptic neuron
   fill(107, 171, 205);
-  rect(650, 175, 150, 250);
+  beginShape();
+  vertex(800, 250);
+  bezierVertex(800, 240, 750, 270, 750, 250);
+  bezierVertex(750, 270, 730, 40, 645, 205);
+  bezierVertex(620, 260, 620, 340, 645, 395);
+  bezierVertex(730, 560, 750, 330, 750, 350);
+  bezierVertex(750, 330, 800, 360, 800, 350);
+  endShape(CLOSE);
   pop();
 }
 
