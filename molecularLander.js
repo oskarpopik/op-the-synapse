@@ -20,8 +20,71 @@ function setup() {
       event.preventDefault();
     }
   });
+
+  gameReset();
+  state = "start";
 }
 
+/* CONST? */
+let moleculeWidth = 25;
+let moleculeHeight = 50;
+
+let state = "start";
+let gameTimer;
+let moleculeX;
+let moleculeY;
+let velocity;
+let acceleration;
+let rotation;
+let speed;
+
+// Start screen function
+function startScreen() {
+  background(50, 100, 255);
+  textSize(32);
+  textAlign(CENTER, CENTER);
+  text("Start Screen", 400, 300);
+}
+
+// Result screen function
+function resultScreen() {
+  background(255, 100, 50);
+  textSize(32);
+  textAlign(CENTER, CENTER);
+  text("Result Screen", 400, 300);
+}
+
+// Starting game values reset function
+function gameReset() {
+  gameTimer = 0;
+  moleculeX = 140;
+  moleculeY = 220;
+  velocity = 0.01;
+  acceleration = 0.001;
+  rotation = 0;
+  speed = 0;
+
+  /* COMMENT THIS OUT AND UN-COMMENT state = "start" in the mouseClicked() function IF YOU WHAT TO MAKE IT RETURN TO THE START SCREEN EACH TIME */
+
+  state = "game";
+}
+
+/* CHANGE THIS LATER TO SPACE CLICK? */
+
+// Initial and after the game player interaction function
+function mouseClicked() {
+  if (state === "start") {
+    state = "game";
+  } else if (state === "result") {
+    gameReset();
+
+    /* UN-COMMENT THIS OUT AND COMMENT state = "game" in the gameReset() function IF YOU WHAT TO MAKE IT RETURN TO THE START SCREEN EACH TIME */
+
+    // state = "start";
+  }
+}
+
+// Background setup function
 function surroundings() {
   push();
   noStroke();
@@ -31,6 +94,7 @@ function surroundings() {
   pop();
 }
 
+// Starting zone setup function
 function presynapticNeuron() {
   push();
   noStroke();
@@ -49,7 +113,6 @@ function presynapticNeuron() {
   ellipse(145, 225, 80);
   ellipse(120, 350, 80);
   // static molecule
-  //molecule
   push();
   stroke(0, 0, 0);
   strokeWeight(1);
@@ -63,6 +126,7 @@ function presynapticNeuron() {
   pop();
 }
 
+// Landing zone setup function
 function postsynapticNeuron() {
   push();
   noStroke();
@@ -79,9 +143,7 @@ function postsynapticNeuron() {
   pop();
 }
 
-let moleculeWidth = 25;
-let moleculeHeight = 50;
-
+// Molecule setup function
 function molecule(moleculeX, moleculeY, rotation) {
   push();
   translate(moleculeX, moleculeY);
@@ -98,15 +160,7 @@ function molecule(moleculeX, moleculeY, rotation) {
   pop();
 }
 
-let moleculeX = 140;
-let moleculeY = 220;
-
-let velocity = 0.01;
-let acceleration = 0.001;
-
-let rotation = 0;
-let speed = 0;
-
+// Controls function
 function keyPressed() {
   // Take a 15 degree step turn counterclockwise when the arrow LEFT is pressed
   if (keyCode === 37) {
@@ -119,27 +173,44 @@ function keyPressed() {
 }
 
 function draw() {
-  surroundings();
-  presynapticNeuron();
-  postsynapticNeuron();
-  molecule(moleculeX, moleculeY, rotation);
+  if (state === "start") {
+    startScreen();
+  } else if (state === "game") {
+    surroundings();
+    presynapticNeuron();
+    postsynapticNeuron();
+    molecule(moleculeX, moleculeY, rotation);
 
-  moleculeX = moleculeX + velocity + Math.cos(rotation) * speed;
-  moleculeY = moleculeY + Math.sin(rotation) * speed;
-  velocity += acceleration;
+    moleculeX = moleculeX + velocity + Math.cos(rotation) * speed;
+    moleculeY = moleculeY + Math.sin(rotation) * speed;
+    velocity += acceleration;
 
-  /* This limits the movement of the molecule to the canvas area */
-  // The following 2 lines of code was adapted from https://www.geeksforgeeks.org/p5-js-constrain-function/Accessed: 2024-02-13
-  moleculeX = constrain(moleculeX, 0 + moleculeWidth, width - moleculeWidth);
-  moleculeY = constrain(moleculeY, 0 + moleculeWidth, height - moleculeWidth);
+    /* This limits the movement of the molecule to the canvas area */
+    // The following 2 lines of code was adapted from https://www.geeksforgeeks.org/p5-js-constrain-function/Accessed: 2024-02-13
+    moleculeX = constrain(moleculeX, 0 + moleculeWidth, width - moleculeWidth);
+    moleculeY = constrain(moleculeY, 0 + moleculeWidth, height - moleculeWidth);
 
-  if (keyIsDown(38)) {
-    // Move toward the postsynaptic neuron when the arrow UP is pressed
-    speed = 5;
-  } else if (keyIsDown(40)) {
-    // Move away from the postsynaptic neuron when the arrow DOWN is pressed
-    speed = -2;
-  } else {
-    speed = 0;
+    if (keyIsDown(38)) {
+      // Move toward the postsynaptic neuron when the arrow UP is pressed
+      speed = 5;
+    } else if (keyIsDown(40)) {
+      // Move away from the postsynaptic neuron when the arrow DOWN is pressed
+      speed = -2;
+    } else {
+      speed = 0;
+    }
+
+    /* HERE IS TEMPORARY LOGIC FOR THE END GAME */
+
+    gameTimer += 1;
+    console.log(gameTimer);
+    fill(255, 255, 255);
+    text(gameTimer, 50, 50);
+  }
+  if (gameTimer >= 500) {
+    gameTimer = 0;
+    state = "result";
+  } else if (state === "result") {
+    resultScreen();
   }
 }
