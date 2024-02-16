@@ -6,7 +6,7 @@ function setup() {
 
   /* UN-COMMENT THIS LATER! */
 
-  canvas.parent("mol-lander-game");
+  // canvas.parent("mol-lander-game");
 
   /* */
 
@@ -22,14 +22,19 @@ function setup() {
   });
 
   gameReset();
-  state = "start";
+  /* DELETE THE LINE BELOW WHEN FINISHED WITH TESTING */
+  state = "game";
+  // state = "start";
 }
 
 /* CONST? */
-let moleculeWidth = 25;
-let moleculeHeight = 50;
+let moleculeWidth = 20;
+let moleculeHeight = 40;
 
-let state = "start";
+/* DELETE THE LINE BELOW WHEN FINISHED WITH TESTING */
+let state = "game";
+// let state = "start";
+
 let gameTimer;
 let moleculeX;
 let moleculeY;
@@ -57,8 +62,8 @@ function resultScreen() {
 // Starting game values reset function
 function gameReset() {
   gameTimer = 0;
-  moleculeX = 140;
-  moleculeY = 220;
+  moleculeX = 155;
+  moleculeY = 225;
   velocity = 0.01;
   acceleration = 0.001;
   rotation = 0;
@@ -100,28 +105,60 @@ function presynapticNeuron() {
   noStroke();
   // presynaptic neuron
   fill(107, 171, 205);
+
+  /* OLD NEURON SHAPE - DELETE LATER */
+  // beginShape();
+  // vertex(0, 250);
+  // bezierVertex(0, 240, 50, 270, 50, 250);
+  // bezierVertex(50, 270, 70, 40, 155, 205);
+  // bezierVertex(180, 260, 180, 340, 155, 395);
+  // bezierVertex(70, 560, 50, 330, 50, 350);
+  // bezierVertex(50, 330, 0, 360, 0, 350);
+  // endShape(CLOSE);
+  // synaptic vesicle
+  // fill(25, 25, 25);
+  // ellipse(145, 225, 80);
+  // ellipse(120, 350, 80);
+  // // static molecule
+  // push();
+  // stroke(0, 0, 0);
+  // strokeWeight(1);
+  // fill(255, 0, 0);
+  // rectMode(CENTER);
+  // rect(120, 350, moleculeWidth, moleculeHeight);
+  // fill(0, 0, 255);
+  // ellipse(120 - 5, 350 - 15, 5);
+  // ellipse(120 - 5, 350 + 15, 5);
+  /* */
+
+  push();
+  // The new improved neuron shape - had to rescale it and translate to fit the game canvas better
+  scale(0.8, 0.8);
+  translate(0, 60);
   beginShape();
   vertex(0, 250);
   bezierVertex(0, 240, 50, 270, 50, 250);
-  bezierVertex(50, 270, 70, 40, 155, 205);
-  bezierVertex(180, 260, 180, 340, 155, 395);
-  bezierVertex(70, 560, 50, 330, 50, 350);
+  bezierVertex(50, 270, 70, 90, 195, 205);
+  bezierVertex(250, 260, 250, 340, 195, 395);
+  bezierVertex(70, 510, 50, 330, 50, 350);
   bezierVertex(50, 330, 0, 360, 0, 350);
   endShape(CLOSE);
+  pop();
+
   // synaptic vesicle
   fill(25, 25, 25);
-  ellipse(145, 225, 80);
-  ellipse(120, 350, 80);
+  ellipse(155, 230, 64);
+  ellipse(120, 330, 64);
   // static molecule
   push();
   stroke(0, 0, 0);
   strokeWeight(1);
   fill(255, 0, 0);
   rectMode(CENTER);
-  rect(120, 350, moleculeWidth, moleculeHeight);
+  rect(120, 330, moleculeWidth, moleculeHeight);
   fill(0, 0, 255);
-  ellipse(120 - 5, 350 - 15, 5);
-  ellipse(120 - 5, 350 + 15, 5);
+  ellipse(120 - 4, 330 - 10, 4);
+  ellipse(120 - 4, 330 + 10, 4);
   pop();
   pop();
 }
@@ -132,14 +169,54 @@ function postsynapticNeuron() {
   noStroke();
   // postsynaptic neuron
   fill(107, 171, 205);
+
+  // beginShape();
+  // vertex(800, 250);
+  // bezierVertex(800, 240, 750, 270, 750, 250);
+  // bezierVertex(750, 270, 730, 40, 645, 205);
+  // bezierVertex(620, 260, 620, 340, 645, 395);
+  // bezierVertex(730, 560, 750, 330, 750, 350);
+  // bezierVertex(750, 330, 800, 360, 800, 350);
+  // endShape(CLOSE);
+
+  // The new improved neuron shape - had to rescale it and translate to fit the game canvas better
+  scale(0.8, 0.8);
+  translate(200, 60);
   beginShape();
   vertex(800, 250);
   bezierVertex(800, 240, 750, 270, 750, 250);
-  bezierVertex(750, 270, 730, 40, 645, 205);
-  bezierVertex(620, 260, 620, 340, 645, 395);
-  bezierVertex(730, 560, 750, 330, 750, 350);
+  bezierVertex(750, 270, 730, 90, 605, 205);
+  bezierVertex(550, 260, 550, 340, 605, 395);
+  bezierVertex(730, 510, 750, 330, 750, 350);
   bezierVertex(750, 330, 800, 360, 800, 350);
   endShape(CLOSE);
+  pop();
+}
+
+// Receptor 1 setup function
+function receptor1() {
+  push();
+  fill(155, 150, 255);
+  translate(590, 290);
+  rectMode(CENTER);
+  rect(0, 0, 30, 60);
+  rect(20, 0, 10);
+  fill(255, 255, 255);
+  rect(20, 0, 10, 2);
+  pop();
+}
+
+// Receptor 2 setup function
+function receptor2() {
+  push();
+  fill(155, 15, 255);
+  translate(660, 405);
+  rotate((-PI * 4) / 12);
+  rectMode(CENTER);
+  rect(0, 0, 30, 60);
+  rect(20, 0, 10);
+  fill(255, 255, 255);
+  rect(20, 0, 10, 2);
   pop();
 }
 
@@ -154,9 +231,8 @@ function molecule(moleculeX, moleculeY, rotation) {
   rectMode(CENTER);
   rect(0, 0, moleculeWidth, moleculeHeight);
   fill(0, 0, 255);
-  ellipse(-5, -15, 5);
-  ellipse(-5, 15, 5);
-
+  ellipse(-4, -10, 4);
+  ellipse(-4, 10, 4);
   pop();
 }
 
@@ -179,6 +255,8 @@ function draw() {
     surroundings();
     presynapticNeuron();
     postsynapticNeuron();
+    receptor1();
+    receptor2();
     molecule(moleculeX, moleculeY, rotation);
 
     moleculeX = moleculeX + velocity + Math.cos(rotation) * speed;
@@ -207,10 +285,11 @@ function draw() {
     fill(255, 255, 255);
     text(gameTimer, 50, 50);
   }
-  if (gameTimer >= 500) {
-    gameTimer = 0;
-    state = "result";
-  } else if (state === "result") {
-    resultScreen();
-  }
+  /* UN-COMMENT THE LINES BELOW WHEN FINISHED WITH TESTING */
+  // if (gameTimer >= 500) {
+  //   gameTimer = 0;
+  //   state = "result";
+  // } else if (state === "result") {
+  //   resultScreen();
+  // }
 }
