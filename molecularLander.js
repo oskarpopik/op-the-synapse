@@ -201,6 +201,9 @@ function receptor1() {
   rectMode(CENTER);
   rect(0, 0, 30, 60);
   rect(20, 0, 10);
+  fill(0, 0, 255);
+  ellipse(6, -10, 4);
+  ellipse(6, 10, 4);
   fill(255, 255, 255);
   rect(20, 0, 10, 2);
   pop();
@@ -215,6 +218,9 @@ function receptor2() {
   rectMode(CENTER);
   rect(0, 0, 30, 60);
   rect(20, 0, 10);
+  fill(0, 0, 255);
+  ellipse(6, -10, 4);
+  ellipse(6, 10, 4);
   fill(255, 255, 255);
   rect(20, 0, 10, 2);
   pop();
