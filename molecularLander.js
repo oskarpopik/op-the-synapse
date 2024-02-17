@@ -338,6 +338,46 @@ function bindingDetenctionRec2(moleculeX, moleculeY) {
   return false;
 }
 
+// Lightning
+// The following 36 lines of code were adapted from https://chat.openai.com/share/650c41a5-28f9-411a-b88e-36844de7f053 Accessed: 2024-02-17
+
+function drawLightning(startX, startY, midX, midY, endX, endY) {
+  let detail = 20; // Adjust for more or less detail in the lightning
+
+  // Draw from start to middle
+  drawSegment(startX, startY, midX, midY, detail);
+
+  // Draw from middle to end
+  drawSegment(midX, midY, endX, endY, detail);
+}
+
+function drawSegment(x1, y1, x2, y2, detail) {
+  stroke(255, 255, 0); // Lightning color
+  strokeWeight(2); // Thickness of the lightning
+  noFill();
+
+  //   The function calculates the deltas (dx, dy) between the start and end points of the segment and divides this by the detail parameter to determine how much each sub-segment should move in the x and y directions.
+  let dx = (x2 - x1) / detail;
+  let dy = (y2 - y1) / detail;
+
+  beginShape();
+  vertex(x1, y1); // Start point
+
+  for (let i = 1; i < detail; i++) {
+    // Add some randomness to vx and vy to create the zigzag effect
+    let vx = x1 + i * dx;
+    let vy = y1 + i * dy;
+    // This deviation introduces horizontal irregularity to the bolt.
+    vx += random(-5, 5);
+    // This deviation introduces vertical irregularity to the bolt.
+    vy += random(-5, 5);
+    vertex(vx, vy);
+  }
+
+  vertex(x2, y2); // End point
+  endShape();
+}
+
 function draw() {
   if (state === "start") {
     startScreen();
@@ -372,10 +412,10 @@ function draw() {
 
     gameTimer += 1;
     fill(255, 255, 255);
-    text("Gameplay time: " + Math.round(gameTimer / 30), 50, 50);
+    text("Gameplay time: " + Math.floor(gameTimer / 60), 50, 50);
   }
   /* UN-COMMENT THE LINES BELOW WHEN FINISHED WITH TESTING */
-  // if (gameTimer >= 500) {
+  // if (gameTimer >= 3600) {
   //   gameTimer = 0;
   //   state = "result";
   // } else if (state === "result") {
@@ -386,15 +426,27 @@ function draw() {
     fill(155, 150, 255);
     textAlign(CENTER);
     text("Binded to receptor!", 400, 50);
-    text("Your score is: " + (60 - Math.round(gameTimer / 30)), 400, 75);
+    text("Your score is: " + (60 - Math.floor(gameTimer / 60)), 400, 75);
     noLoop();
+    // Very basic lightning representation
+    // stroke(255, 255, 0);
+    // strokeWeight(2);
+    // line(616, 290, 708, 297);
+    // line(708, 297, 800, 290);
+    drawLightning(616, 290, 708, 297, 800, 290);
   }
 
   if (bindingDetenctionRec2(moleculeX, moleculeY)) {
     fill(155, 15, 255);
     textAlign(CENTER);
     text("Binded to receptor!", 400, 50);
-    text("Your score is: " + (60 - Math.round(gameTimer / 30)) * 2, 400, 75);
+    text("Your score is: " + (60 - Math.floor(gameTimer / 60)) * 2, 400, 75);
     noLoop();
+    // Very basic lightning representation
+    // stroke(255, 255, 0);
+    // strokeWeight(2);
+    // line(673, 383, 748, 297);
+    // line(748, 297, 800, 290);
+    drawLightning(673, 383, 748, 297, 800, 290);
   }
 }
