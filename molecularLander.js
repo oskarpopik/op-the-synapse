@@ -371,9 +371,8 @@ function draw() {
     /* HERE IS TEMPORARY LOGIC FOR THE END GAME */
 
     gameTimer += 1;
-    console.log(gameTimer);
     fill(255, 255, 255);
-    text(gameTimer, 50, 50);
+    text("Gameplay time: " + Math.round(gameTimer / 30), 50, 50);
   }
   /* UN-COMMENT THE LINES BELOW WHEN FINISHED WITH TESTING */
   // if (gameTimer >= 500) {
@@ -387,7 +386,7 @@ function draw() {
     fill(155, 150, 255);
     textAlign(CENTER);
     text("Binded to receptor!", 400, 50);
-    text("Your score is: " + gameTimer, 400, 75);
+    text("Your score is: " + (60 - Math.round(gameTimer / 30)), 400, 75);
     noLoop();
   }
 
@@ -395,7 +394,7 @@ function draw() {
     fill(155, 15, 255);
     textAlign(CENTER);
     text("Binded to receptor!", 400, 50);
-    text("Your score is: " + gameTimer * 2, 400, 75);
+    text("Your score is: " + (60 - Math.round(gameTimer / 30)) * 2, 400, 75);
     noLoop();
   }
 }
