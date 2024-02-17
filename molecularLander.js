@@ -1,4 +1,4 @@
-/* This is a variation of the Lunar Lander game. The game mimics the release of neurotransmitters between two neuron cells in a synapse. This process is happening in every brain and allows for comunication between the brain cells. */
+/* This is a variation of the Lunar Lander game. The game mimics the release of neurotransmitters between two neuron cells in a synapse. When a neurotransmitter released from the presynaptic neuron binds to the postsynaptic neuron an electric impulse is generated. This process enables comunication between the brain cells. */
 
 // Canvas Setup
 function setup() {
@@ -201,6 +201,10 @@ function receptor1() {
   rectMode(CENTER);
   rect(0, 0, 30, 60);
   rect(20, 0, 10);
+  /* Actual binding area of receptor1 starts here */
+  fill(255, 155, 150);
+  rect(0, 0, 22, 42);
+  /* Ends here */
   fill(0, 0, 255);
   ellipse(6, -10, 4);
   ellipse(6, 10, 4);
@@ -218,6 +222,10 @@ function receptor2() {
   rectMode(CENTER);
   rect(0, 0, 30, 60);
   rect(20, 0, 10);
+  /* Actual binding area of receptor2 starts here */
+  fill(255, 155, 150);
+  rect(0, 0, 22, 42);
+  /* Ends here */
   fill(0, 0, 255);
   ellipse(6, -10, 4);
   ellipse(6, 10, 4);
@@ -252,6 +260,82 @@ function keyPressed() {
   } else if (keyCode === 39) {
     rotation += PI / 12;
   }
+}
+
+/* The following logic is needed for the detection of molecular binding
+
+A molecule is at the landing (binding) area if all of conditions below are fully met:
+x: molecule's left edge > receptor's left edge &&
+x: molecule's right edge < receptor's right edge &&
+y: molecule's top edge > receptor's top edge &&
+y: molecule's bottom edge < receptor's bottom edge
+
+*/
+
+function bindingDetenctionRec1(moleculeX, moleculeY) {
+  // Edges of the molecule
+  let moleculeLeftEdge = moleculeX - moleculeWidth / 2;
+  let moleculeRightEdge = moleculeX + moleculeWidth / 2;
+  let moleculeTopEdge = moleculeY - moleculeHeight / 2;
+  let moleculeBottomEdge = moleculeY + moleculeWidth / 2;
+
+  // Define the center and the widht and height of receptor1
+  let rec1X = 590;
+  let rec1Y = 290;
+  /* Actual binding area of receptor1 starts here */
+  let rec1Width = 22;
+  let rec1Height = 42;
+  /* Ends here */
+
+  // Edges of the receptor1
+  let rec1LeftEdge = rec1X - rec1Width / 2;
+  let rec1RightEdge = rec1X + rec1Width / 2;
+  let rec1TopEdge = rec1Y - rec1Height / 2;
+  let rec1BottomEdge = rec1Y + rec1Height / 2;
+
+  // Binding to receptor 1 detection
+  if (
+    moleculeLeftEdge > rec1LeftEdge &&
+    moleculeRightEdge < rec1RightEdge &&
+    moleculeTopEdge > rec1TopEdge &&
+    moleculeBottomEdge < rec1BottomEdge
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function bindingDetenctionRec2(moleculeX, moleculeY) {
+  // Edges of the molecule
+  let moleculeLeftEdge = moleculeX - moleculeWidth / 2;
+  let moleculeRightEdge = moleculeX + moleculeWidth / 2;
+  let moleculeTopEdge = moleculeY - moleculeHeight / 2;
+  let moleculeBottomEdge = moleculeY + moleculeWidth / 2;
+
+  // Define the center and the widht and height of receptor1
+  let rec2X = 660;
+  let rec2Y = 405;
+  /* Actual binding area of receptor2 starts here */
+  let rec2Width = 22;
+  let rec2Height = 42;
+  /* Ends here */
+
+  // Edges of the receptor1
+  let rec2LeftEdge = rec2X - rec2Width / 2;
+  let rec2RightEdge = rec2X + rec2Width / 2;
+  let rec2TopEdge = rec2Y - rec2Height / 2;
+  let rec2BottomEdge = rec2Y + rec2Height / 2;
+
+  // Binding to receptor 2 detection
+  if (
+    moleculeLeftEdge > rec2LeftEdge &&
+    moleculeRightEdge < rec2RightEdge &&
+    moleculeTopEdge > rec2TopEdge &&
+    moleculeBottomEdge < rec2BottomEdge
+  ) {
+    return true;
+  }
+  return false;
 }
 
 function draw() {
@@ -298,4 +382,20 @@ function draw() {
   // } else if (state === "result") {
   //   resultScreen();
   // }
+
+  if (bindingDetenctionRec1(moleculeX, moleculeY)) {
+    fill(155, 150, 255);
+    textAlign(CENTER);
+    text("Binded to receptor!", 400, 50);
+    text("Your score is: " + gameTimer, 400, 75);
+    noLoop();
+  }
+
+  if (bindingDetenctionRec2(moleculeX, moleculeY)) {
+    fill(155, 15, 255);
+    textAlign(CENTER);
+    text("Binded to receptor!", 400, 50);
+    text("Your score is: " + gameTimer * 2, 400, 75);
+    noLoop();
+  }
 }
