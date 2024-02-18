@@ -6,11 +6,10 @@ function setup() {
 
   /* UN-COMMENT THIS LATER! */
 
-  // canvas.parent("mol-lander-game");
+  canvas.parent("mol-lander-game");
 
   /* */
 
-  background(255, 255, 255);
   // The following 7 lines of code were adapted from https://chat.openai.com/share/b658d5de-9fcf-4f45-86b9-b2af2204eefe Accessed: 2024-02-14
   // Prevent default behavior for arrow keys
   document.addEventListener("keydown", function (event) {
@@ -22,18 +21,18 @@ function setup() {
   });
 
   gameReset();
-  /* DELETE THE LINE BELOW WHEN FINISHED WITH TESTING */
-  state = "game";
-  // state = "start";
+  /* UN-COMMENTIG THIS LINE AND COMMENTING THE ONE BELOW ALLOWS TO BLOCK THE START SCREEN - DELETE WHEN FINISHED WITH TESTING */
+  // state = "game";
+  state = "start";
 }
 
 /* CONST? */
-let moleculeWidth = 20;
-let moleculeHeight = 40;
+const moleculeWidth = 20;
+const moleculeHeight = 40;
 
-/* DELETE THE LINE BELOW WHEN FINISHED WITH TESTING */
-let state = "game";
-// let state = "start";
+/* UN-COMMENTIG THIS LINE AND COMMENTING THE ONE BELOW ALLOWS TO BLOCK THE START SCREEN - DELETE WHEN FINISHED WITH TESTING */
+// let state = "game";
+let state = "start";
 
 let gameTimer;
 let moleculeX;
@@ -45,18 +44,40 @@ let speed;
 
 // Start screen function
 function startScreen() {
-  background(50, 100, 255);
+  push();
+  background(107, 171, 205);
+  fill(25, 25, 25);
   textSize(32);
   textAlign(CENTER, CENTER);
-  text("Start Screen", 400, 300);
+  text("Welcome to The Synapse game", 400, 150);
+  textSize(20);
+  text("Use arrow keys to controle [the molecule]", 400, 250);
+  text(
+    "You have only 1 minute to cross the synapse and slowly bind to the receptor",
+    400,
+    300
+  );
+  text("Earn more points (x2) by binding to the darker receptor", 400, 350);
+  textSize(32);
+  text("Click mouse button to start the game", 400, 450);
+  pop();
 }
 
 // Result screen function
 function resultScreen() {
-  background(255, 100, 50);
-  textSize(32);
+  push();
+  stroke(255, 255, 255);
+  strokeWeight(5);
+  fill(107, 171, 205);
+  rect(-5, 50, 550, 505, 0, 15, 15, 0);
+  noStroke();
+  fill(25, 25, 25);
+  textSize(26);
   textAlign(CENTER, CENTER);
-  text("Result Screen", 400, 300);
+  text(resultScreenMessage, 250, 200);
+  text(resultScreenMessage2, 250, 300);
+  text("Click mouse button to play again", 250, 400);
+  pop();
 }
 
 // Starting game values reset function
@@ -74,8 +95,6 @@ function gameReset() {
   state = "game";
 }
 
-/* CHANGE THIS LATER TO SPACE CLICK? */
-
 // Initial and after the game player interaction function
 function mouseClicked() {
   if (state === "start") {
@@ -92,7 +111,8 @@ function mouseClicked() {
 // Background setup function
 function surroundings() {
   push();
-  noStroke();
+  stroke(255, 255, 255);
+  strokeWeight(10);
   // background
   fill(25, 25, 25);
   rect(0, 0, width, height);
@@ -105,31 +125,6 @@ function presynapticNeuron() {
   noStroke();
   // presynaptic neuron
   fill(107, 171, 205);
-
-  /* OLD NEURON SHAPE - DELETE LATER */
-  // beginShape();
-  // vertex(0, 250);
-  // bezierVertex(0, 240, 50, 270, 50, 250);
-  // bezierVertex(50, 270, 70, 40, 155, 205);
-  // bezierVertex(180, 260, 180, 340, 155, 395);
-  // bezierVertex(70, 560, 50, 330, 50, 350);
-  // bezierVertex(50, 330, 0, 360, 0, 350);
-  // endShape(CLOSE);
-  // synaptic vesicle
-  // fill(25, 25, 25);
-  // ellipse(145, 225, 80);
-  // ellipse(120, 350, 80);
-  // // static molecule
-  // push();
-  // stroke(0, 0, 0);
-  // strokeWeight(1);
-  // fill(255, 0, 0);
-  // rectMode(CENTER);
-  // rect(120, 350, moleculeWidth, moleculeHeight);
-  // fill(0, 0, 255);
-  // ellipse(120 - 5, 350 - 15, 5);
-  // ellipse(120 - 5, 350 + 15, 5);
-  /* */
 
   push();
   // The new improved neuron shape - had to rescale it and translate to fit the game canvas better
@@ -169,15 +164,6 @@ function postsynapticNeuron() {
   noStroke();
   // postsynaptic neuron
   fill(107, 171, 205);
-
-  // beginShape();
-  // vertex(800, 250);
-  // bezierVertex(800, 240, 750, 270, 750, 250);
-  // bezierVertex(750, 270, 730, 40, 645, 205);
-  // bezierVertex(620, 260, 620, 340, 645, 395);
-  // bezierVertex(730, 560, 750, 330, 750, 350);
-  // bezierVertex(750, 330, 800, 360, 800, 350);
-  // endShape(CLOSE);
 
   // The new improved neuron shape - had to rescale it and translate to fit the game canvas better
   scale(0.8, 0.8);
@@ -240,7 +226,7 @@ function molecule(moleculeX, moleculeY, rotation) {
   translate(moleculeX, moleculeY);
   rotate(rotation);
 
-  //molecule
+  // Molecule
   fill(255, 0, 0);
   rectMode(CENTER);
   rect(0, 0, moleculeWidth, moleculeHeight);
@@ -352,6 +338,7 @@ function drawLightning(startX, startY, midX, midY, endX, endY) {
 }
 
 function drawSegment(x1, y1, x2, y2, detail) {
+  push();
   stroke(255, 255, 0); // Lightning color
   strokeWeight(2); // Thickness of the lightning
   noFill();
@@ -376,6 +363,7 @@ function drawSegment(x1, y1, x2, y2, detail) {
 
   vertex(x2, y2); // End point
   endShape();
+  pop();
 }
 
 function draw() {
@@ -408,45 +396,116 @@ function draw() {
       speed = 0;
     }
 
-    /* HERE IS TEMPORARY LOGIC FOR THE END GAME */
-
     gameTimer += 1;
+    push();
     fill(255, 255, 255);
-    text("Gameplay time: " + Math.floor(gameTimer / 60), 50, 50);
+    textSize(20);
+    textAlign(CENTER, CENTER);
+    text("Gameplay time: " + (60 - Math.floor(gameTimer / 60)) + " s", 690, 25);
+    pop();
+
+    if (
+      gameTimer >= 3600 ||
+      bindingDetenctionRec1(moleculeX, moleculeY) ||
+      bindingDetenctionRec2(moleculeX, moleculeY)
+    ) {
+      state = "result";
+
+      if (gameTimer >= 3600) {
+        resultScreenMessage = "GAME OVER";
+        resultScreenMessage2 = "You ran out of time!";
+      }
+
+      if (bindingDetenctionRec1(moleculeX, moleculeY)) {
+        /* DELETE THIS LATER - WAS USED EARIER, NOT ANYMORE */
+
+        // push();
+        // fill(155, 150, 255);
+        // textAlign(CENTER);
+        // text("Binded to receptor!", 400, 50);
+        // text("Your score is: " + (60 - Math.floor(gameTimer / 60)), 400, 75);
+        // pop();
+
+        /* END */
+
+        resultScreenMessage = "Successful binding to the receptor!";
+        resultScreenMessage2 =
+          "Your score is: " + 10 * (60 - Math.floor(gameTimer / 60));
+        // Very basic lightning representation
+        // stroke(255, 255, 0);
+        // strokeWeight(2);
+        // line(616, 290, 708, 297);
+        // line(708, 297, 800, 290);
+        drawLightning(616, 290, 708, 297, 800, 290);
+        // noLoop();
+      }
+
+      if (bindingDetenctionRec2(moleculeX, moleculeY)) {
+        /* DELETE THIS LATER - WAS USED EARIER, NOT ANYMORE */
+
+        // push();
+        // fill(155, 15, 255);
+        // textAlign(CENTER);
+        // text("Binded to receptor!", 400, 50);
+        // text(
+        //   "Your score is: " + (60 - Math.floor(gameTimer / 60)) * 2,
+        //   400,
+        //   75
+        // );
+        // pop();
+
+        /* END */
+
+        resultScreenMessage = "Successful binding to the receptor!";
+        resultScreenMessage2 =
+          "Your score is: " + 20 * (60 - Math.floor(gameTimer / 60));
+        // Very basic lightning representation
+        // stroke(255, 255, 0);
+        // strokeWeight(2);
+        // line(673, 383, 728, 297);
+        // line(728, 297, 800, 290);
+        drawLightning(673, 383, 728, 297, 800, 290);
+        // noLoop();
+      }
+    }
+  } else if (state === "result") {
+    resultScreen();
   }
-  /* UN-COMMENT THE LINES BELOW WHEN FINISHED WITH TESTING */
+
+  /* BACKUP POINT */
+
   // if (gameTimer >= 3600) {
-  //   gameTimer = 0;
+  //   // gameTimer = 0;
   //   state = "result";
   // } else if (state === "result") {
   //   resultScreen();
   // }
 
-  if (bindingDetenctionRec1(moleculeX, moleculeY)) {
-    fill(155, 150, 255);
-    textAlign(CENTER);
-    text("Binded to receptor!", 400, 50);
-    text("Your score is: " + (60 - Math.floor(gameTimer / 60)), 400, 75);
-    noLoop();
-    // Very basic lightning representation
-    // stroke(255, 255, 0);
-    // strokeWeight(2);
-    // line(616, 290, 708, 297);
-    // line(708, 297, 800, 290);
-    drawLightning(616, 290, 708, 297, 800, 290);
-  }
+  // if (bindingDetenctionRec1(moleculeX, moleculeY)) {
+  //   fill(155, 150, 255);
+  //   textAlign(CENTER);
+  //   text("Binded to receptor!", 400, 50);
+  //   text("Your score is: " + (60 - Math.floor(gameTimer / 60)), 400, 75);
+  //   noLoop();
+  //   // Very basic lightning representation
+  //   // stroke(255, 255, 0);
+  //   // strokeWeight(2);
+  //   // line(616, 290, 708, 297);
+  //   // line(708, 297, 800, 290);
+  //   drawLightning(616, 290, 708, 297, 800, 290);
+  // }
 
-  if (bindingDetenctionRec2(moleculeX, moleculeY)) {
-    fill(155, 15, 255);
-    textAlign(CENTER);
-    text("Binded to receptor!", 400, 50);
-    text("Your score is: " + (60 - Math.floor(gameTimer / 60)) * 2, 400, 75);
-    noLoop();
-    // Very basic lightning representation
-    // stroke(255, 255, 0);
-    // strokeWeight(2);
-    // line(673, 383, 748, 297);
-    // line(748, 297, 800, 290);
-    drawLightning(673, 383, 748, 297, 800, 290);
-  }
+  // if (bindingDetenctionRec2(moleculeX, moleculeY)) {
+  //   fill(155, 15, 255);
+  //   textAlign(CENTER);
+  //   text("Binded to receptor!", 400, 50);
+  //   text("Your score is: " + (60 - Math.floor(gameTimer / 60)) * 2, 400, 75);
+  //   noLoop();
+  //   // Very basic lightning representation
+  //   // stroke(255, 255, 0);
+  //   // strokeWeight(2);
+  //   // line(673, 383, 728, 297);
+  //   // line(728, 297, 800, 290);
+  //   drawLightning(673, 383, 728, 297, 800, 290);
+  // }
 }
