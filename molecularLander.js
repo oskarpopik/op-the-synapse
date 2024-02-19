@@ -1,4 +1,4 @@
-/* This is a variation of the Lunar Lander game. The game mimics the release of neurotransmitters between two neuron cells in a synapse. When a neurotransmitter released from the presynaptic neuron binds to the postsynaptic neuron an electric impulse is generated. This process enables comunication between the brain cells. */
+/* This is a variation of the Lunar Lander game. The game mimics the release of neurotransmitters between two neuron cells in a synapse. When a neurotransmitter released from the presynaptic neuron binds to the postsynaptic neuron an electric impulse is generated. This process enables comunication between the brain cells. Welcome to The Synapse */
 
 // Canvas Setup
 function setup() {
@@ -26,7 +26,6 @@ function setup() {
   state = "start";
 }
 
-/* CONST? */
 const moleculeWidth = 20;
 const moleculeHeight = 40;
 
@@ -69,13 +68,17 @@ function resultScreen() {
   stroke(255, 255, 255);
   strokeWeight(5);
   fill(107, 171, 205);
-  rect(-5, 50, 550, 505, 0, 15, 15, 0);
+  rect(-5, 50, 550, 505);
   noStroke();
   fill(25, 25, 25);
   textSize(26);
   textAlign(CENTER, CENTER);
   text(resultScreenMessage, 250, 200);
+  push();
+  textStyle(BOLD);
+  textSize(32);
   text(resultScreenMessage2, 250, 300);
+  pop();
   text("Click mouse button to play again", 250, 400);
   pop();
 }
@@ -176,6 +179,11 @@ function postsynapticNeuron() {
   bezierVertex(730, 510, 750, 330, 750, 350);
   bezierVertex(750, 330, 800, 360, 800, 350);
   endShape(CLOSE);
+  // Test shape for collision detection with postsynaptic neuron
+  fill(255, 255, 255, 150);
+  ellipse(665, 300, 185, 250);
+  fill(205, 25, 205, 150);
+  ellipse(690, 290, 170, 230);
   pop();
 }
 
@@ -248,15 +256,46 @@ function keyPressed() {
   }
 }
 
+/* This function is based on the ellipse equation:
+ * x ** 2 / a ** 2 + y ** 2 / b ** 2 <= 1
+ * For a point to be inside the ellipse, the value of the left-hand side must be less than or equal to 1.
+ * In the function, normalizedX and normalizedY are used as x and y.
+ * Since the ellipse has been normalized so that a = b = 1, the equation simplifies to:
+ * normalizedX ** 2 + normalizedY ** 2 <= 1
+ */
+
+// The following 21 lines of code were adapted from https://chat.openai.com/share/590788a7-1009-4a30-8e85-b7dac6f2e486 Accessed: 2024-02-19
+
+function collisionWithNeuronDetection(moleculeX, moleculeY) {
+  // Parameters of the ellipse almost covering the neuron
+  let ellipseX = 690;
+  let ellipseY = 280;
+  let ellipseWidth = 170;
+  let ellipseHeight = 230;
+
+  // Calculating relative position of the center of the molecule to the center of the ellipse (neuron)
+  let relativeMoleculeX = moleculeX - ellipseX;
+  let relativeMoleculeY = moleculeY - ellipseY;
+
+  // Normalize molecules coordinates relative to ellipse's  (neurons) radii
+  let normalizedX = relativeMoleculeX / (ellipseWidth / 2);
+  let normalizedY = relativeMoleculeY / (ellipseHeight / 2);
+
+  // Check if the molecule center is within the ellipse (neuron) using the ellipse equation
+  if (normalizedX * normalizedX + normalizedY * normalizedY <= 1) {
+    return true; // The molecule's center is within the ellipse (neuron)
+  }
+  return false; // The molecule's center is outside
+}
+
 /* The following logic is needed for the detection of molecular binding
-
-A molecule is at the landing (binding) area if all of conditions below are fully met:
-x: molecule's left edge > receptor's left edge &&
-x: molecule's right edge < receptor's right edge &&
-y: molecule's top edge > receptor's top edge &&
-y: molecule's bottom edge < receptor's bottom edge
-
-*/
+ *
+ * A molecule is at the landing (binding) area if all of conditions below are fully met:
+ * x: molecule's left edge > receptor's left edge &&
+ * x: molecule's right edge < receptor's right edge &&
+ * y: molecule's top edge > receptor's top edge &&
+ * y: molecule's bottom edge < receptor's bottom edge
+ */
 
 function bindingDetenctionRec1(moleculeX, moleculeY) {
   // Edges of the molecule
@@ -407,27 +446,17 @@ function draw() {
     if (
       gameTimer >= 3600 ||
       bindingDetenctionRec1(moleculeX, moleculeY) ||
-      bindingDetenctionRec2(moleculeX, moleculeY)
+      bindingDetenctionRec2(moleculeX, moleculeY) ||
+      collisionWithNeuronDetection(moleculeX, moleculeY)
     ) {
       state = "result";
 
       if (gameTimer >= 3600) {
-        resultScreenMessage = "GAME OVER";
-        resultScreenMessage2 = "You ran out of time!";
+        resultScreenMessage = "You ran out of time!";
+        resultScreenMessage2 = "GAME OVER";
       }
 
       if (bindingDetenctionRec1(moleculeX, moleculeY)) {
-        /* DELETE THIS LATER - WAS USED EARIER, NOT ANYMORE */
-
-        // push();
-        // fill(155, 150, 255);
-        // textAlign(CENTER);
-        // text("Binded to receptor!", 400, 50);
-        // text("Your score is: " + (60 - Math.floor(gameTimer / 60)), 400, 75);
-        // pop();
-
-        /* END */
-
         resultScreenMessage = "Successful binding to the receptor!";
         resultScreenMessage2 =
           "Your score is: " + 10 * (60 - Math.floor(gameTimer / 60));
@@ -441,21 +470,6 @@ function draw() {
       }
 
       if (bindingDetenctionRec2(moleculeX, moleculeY)) {
-        /* DELETE THIS LATER - WAS USED EARIER, NOT ANYMORE */
-
-        // push();
-        // fill(155, 15, 255);
-        // textAlign(CENTER);
-        // text("Binded to receptor!", 400, 50);
-        // text(
-        //   "Your score is: " + (60 - Math.floor(gameTimer / 60)) * 2,
-        //   400,
-        //   75
-        // );
-        // pop();
-
-        /* END */
-
         resultScreenMessage = "Successful binding to the receptor!";
         resultScreenMessage2 =
           "Your score is: " + 20 * (60 - Math.floor(gameTimer / 60));
@@ -467,45 +481,13 @@ function draw() {
         drawLightning(673, 383, 728, 297, 800, 290);
         // noLoop();
       }
+
+      if (collisionWithNeuronDetection(moleculeX, moleculeY)) {
+        resultScreenMessage = "You missed the receptor!";
+        resultScreenMessage2 = "GAME OVER";
+      }
     }
   } else if (state === "result") {
     resultScreen();
   }
-
-  /* BACKUP POINT */
-
-  // if (gameTimer >= 3600) {
-  //   // gameTimer = 0;
-  //   state = "result";
-  // } else if (state === "result") {
-  //   resultScreen();
-  // }
-
-  // if (bindingDetenctionRec1(moleculeX, moleculeY)) {
-  //   fill(155, 150, 255);
-  //   textAlign(CENTER);
-  //   text("Binded to receptor!", 400, 50);
-  //   text("Your score is: " + (60 - Math.floor(gameTimer / 60)), 400, 75);
-  //   noLoop();
-  //   // Very basic lightning representation
-  //   // stroke(255, 255, 0);
-  //   // strokeWeight(2);
-  //   // line(616, 290, 708, 297);
-  //   // line(708, 297, 800, 290);
-  //   drawLightning(616, 290, 708, 297, 800, 290);
-  // }
-
-  // if (bindingDetenctionRec2(moleculeX, moleculeY)) {
-  //   fill(155, 15, 255);
-  //   textAlign(CENTER);
-  //   text("Binded to receptor!", 400, 50);
-  //   text("Your score is: " + (60 - Math.floor(gameTimer / 60)) * 2, 400, 75);
-  //   noLoop();
-  //   // Very basic lightning representation
-  //   // stroke(255, 255, 0);
-  //   // strokeWeight(2);
-  //   // line(673, 383, 728, 297);
-  //   // line(728, 297, 800, 290);
-  //   drawLightning(673, 383, 728, 297, 800, 290);
-  // }
 }
