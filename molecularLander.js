@@ -22,16 +22,16 @@ function setup() {
 
   gameReset();
   /* UN-COMMENTIG THIS LINE AND COMMENTING THE ONE BELOW ALLOWS TO BLOCK THE START SCREEN - DELETE WHEN FINISHED WITH TESTING */
-  // state = "game";
-  state = "start";
+  state = "game";
+  // state = "start";
 }
 
 const moleculeWidth = 20;
 const moleculeHeight = 40;
 
 /* UN-COMMENTIG THIS LINE AND COMMENTING THE ONE BELOW ALLOWS TO BLOCK THE START SCREEN - DELETE WHEN FINISHED WITH TESTING */
-// let state = "game";
-let state = "start";
+let state = "game";
+// let state = "start";
 
 let gameTimer;
 let moleculeX;
@@ -50,7 +50,7 @@ function startScreen() {
   textAlign(CENTER, CENTER);
   text("Welcome to The Synapse game", 400, 150);
   textSize(20);
-  text("Use arrow keys to controle [the molecule]", 400, 250);
+  text("Use arrow keys to controle the dopamine molecule", 400, 250);
   text(
     "You have only 1 minute to cross the synapse and slowly bind to the receptor",
     400,
@@ -143,20 +143,74 @@ function presynapticNeuron() {
   endShape(CLOSE);
   pop();
 
+  // Shading
+  push();
+  fill(250, 255, 255, 100);
+  beginShape();
+  vertex(130, 200);
+  bezierVertex(90, 170, 45, 220, 50, 250);
+  bezierVertex(60, 220, 90, 190, 130, 200);
+  endShape(CLOSE);
+  pop();
+
+  push();
+  fill(50, 119, 146, 200);
+  beginShape();
+  vertex(165, 340);
+  bezierVertex(125, 400, 65, 410, 45, 320);
+  bezierVertex(75, 410, 150, 360, 165, 340);
+  endShape(CLOSE);
+  pop();
+
   // synaptic vesicle
   fill(25, 25, 25);
   ellipse(155, 230, 64);
-  ellipse(120, 330, 64);
+  ellipse(120, 320, 64);
+
   // static molecule
   push();
-  stroke(0, 0, 0);
-  strokeWeight(1);
-  fill(255, 0, 0);
+  // stroke(255, 255, 255);
+  fill(25, 25, 25);
   rectMode(CENTER);
-  rect(120, 330, moleculeWidth, moleculeHeight);
+  rect(120, 320, moleculeWidth, moleculeHeight);
+
+  // Bonds between the atoms
+  stroke(255, 255, 255);
+
+  strokeWeight(0.6);
+  line(120 - 6, 320 + 15, 120 - 3, 320 + 10); // C-O BOND
+  line(120 + 6, 320 + 15, 120 + 3, 320 + 10); // C-O BOND
+  line(120 - 3, 320 - 10, 120 - 6, 320 - 15); // C-N (side chain)
+  line(120 - 6, 320 - 5, 120 - 3, 320 - 10); // C-C (side chain)
+  line(120 - 6, 320 - 5, 120 - 3, 320, 4); // C-C (side chain - Ar)
+  line(120 - 6, 320 + 5, 120 - 3, 320 + 10); // C-C (Ar)
+  line(120 - 3, 320, 120 + 3, 320); // C-C (Ar)
+  line(120 + 3, 320 + 10, 120 + 6, 320 + 5); // C-C (Ar)
+
+  strokeWeight(1.2);
+  line(120 - 6, 320 + 5, 120 - 3, 320); // C=C (Ar)
+  line(120 + 6, 320 + 5, 120 + 3, 320); // C=C (Ar)
+  line(120 - 3, 320 + 10, 120 + 3, 320 + 10); // C=C (Ar)
+
+  // Atoms
+  push();
+  stroke(255, 255, 255);
+  strokeWeight(0.3);
+  fill(255, 0, 0);
+  ellipse(120 - 6, 320 + 15, 4); // oxygen
+  ellipse(120 + 6, 320 + 15, 4); // oxygen
+  fill(75, 75, 75);
+  ellipse(120 - 6, 320 + 5, 4);
+  ellipse(120 - 6, 320 - 5, 4); // side chain
+  ellipse(120 - 3, 320 + 10, 4);
+  ellipse(120 + 3, 320 + 10, 4);
+  ellipse(120 + 6, 320 + 5, 4);
+  ellipse(120 - 3, 320, 4);
+  ellipse(120 + 3, 320, 4);
+  ellipse(120 - 3, 320 - 10, 4); // side chain
   fill(0, 0, 255);
-  ellipse(120 - 4, 330 - 10, 4);
-  ellipse(120 - 4, 330 + 10, 4);
+  ellipse(120 - 6, 320 - 15, 4); // nitrogen
+  pop();
   pop();
   pop();
 }
@@ -166,6 +220,7 @@ function postsynapticNeuron() {
   push();
   noStroke();
   // postsynaptic neuron
+  push();
   fill(107, 171, 205);
 
   // The new improved neuron shape - had to rescale it and translate to fit the game canvas better
@@ -179,11 +234,32 @@ function postsynapticNeuron() {
   bezierVertex(730, 510, 750, 330, 750, 350);
   bezierVertex(750, 330, 800, 360, 800, 350);
   endShape(CLOSE);
+  pop();
+
+  // Shading
+  push();
+  fill(250, 255, 255, 100);
+  beginShape();
+  vertex(625, 260);
+  bezierVertex(640, 200, 700, 180, 725, 195);
+  bezierVertex(700, 190, 640, 225, 625, 260);
+  endShape(CLOSE);
+  pop();
+
+  push();
+  fill(50, 119, 146, 200);
+  beginShape();
+  vertex(635, 340);
+  bezierVertex(675, 400, 735, 410, 755, 320);
+  bezierVertex(725, 390, 650, 360, 635, 340);
+  endShape();
+  pop();
+
   // Test shape for collision detection with postsynaptic neuron
-  fill(255, 255, 255, 150);
-  ellipse(665, 300, 185, 250);
-  fill(205, 25, 205, 150);
-  ellipse(690, 290, 170, 230);
+  // fill(255, 255, 255, 150);
+  // ellipse(665, 300, 185, 250);
+  // fill(205, 25, 205, 150);
+  // ellipse(690, 280, 170, 230);
   pop();
 }
 
@@ -193,17 +269,22 @@ function receptor1() {
   fill(155, 150, 255);
   translate(590, 290);
   rectMode(CENTER);
-  rect(0, 0, 30, 60);
-  rect(20, 0, 10);
+  // Stem
+  rect(20, 0, 10, 10, 5);
+  push();
+  fill(255, 255, 255);
+  rect(20, 0, 8, 2);
+  pop();
+  // Receptor
+  rect(14, 0, 5, 58, 5);
+  rect(0, 26, 31, 7, 5);
+  rect(0, -26, 31, 7, 5);
+
   /* Actual binding area of receptor1 starts here */
-  fill(255, 155, 150);
+  noStroke();
+  fill(25, 25, 25);
   rect(0, 0, 22, 42);
   /* Ends here */
-  fill(0, 0, 255);
-  ellipse(6, -10, 4);
-  ellipse(6, 10, 4);
-  fill(255, 255, 255);
-  rect(20, 0, 10, 2);
   pop();
 }
 
@@ -214,17 +295,22 @@ function receptor2() {
   translate(660, 405);
   rotate((-PI * 4) / 12);
   rectMode(CENTER);
-  rect(0, 0, 30, 60);
-  rect(20, 0, 10);
-  /* Actual binding area of receptor2 starts here */
-  fill(255, 155, 150);
-  rect(0, 0, 22, 42);
-  /* Ends here */
-  fill(0, 0, 255);
-  ellipse(6, -10, 4);
-  ellipse(6, 10, 4);
+  // Stem
+  rect(20, 0, 10, 10, 5);
+  push();
   fill(255, 255, 255);
   rect(20, 0, 10, 2);
+  pop();
+  // Receotor
+  rect(14, 0, 5, 58, 5);
+  rect(0, 26, 31, 7, 5);
+  rect(0, -26, 31, 7, 5);
+
+  /* Actual binding area of receptor2 starts here */
+  noStroke();
+  fill(25, 25, 25);
+  rect(0, 0, 22, 42);
+  /* Ends here */
   pop();
 }
 
@@ -233,14 +319,52 @@ function molecule(moleculeX, moleculeY, rotation) {
   push();
   translate(moleculeX, moleculeY);
   rotate(rotation);
+  scale(-1, -1); // Flip vertically around the shape's axis
 
   // Molecule
+  // stroke(255, 255, 255);
+  noStroke();
+  // fill(25, 25, 25);
+  // rectMode(CENTER);
+  // rect(0, 0, moleculeWidth, moleculeHeight);
+
+  // Bonds between the atoms
+  stroke(255, 255, 255);
+
+  strokeWeight(0.6);
+  line(-6, 15, -3, 10); // C-O BOND
+  line(6, 15, 3, 10); // C-O BOND
+  line(-3, -10, -6, -15); // C-N (side chain)
+  line(-6, -5, -3, -10); // C-C (side chain)
+  line(-6, -5, -3, 0, 4); // C-C (side chain - Ar)
+  line(-6, 5, -3, 10); // C-C (Ar)
+  line(-3, 0, 3, 0); // C-C (Ar)
+  line(3, 10, 6, 5); // C-C (Ar)
+
+  strokeWeight(1.2);
+  line(-6, 5, -3, 0); // C=C (Ar)
+  line(6, 5, 3, 0); // C=C (Ar)
+  line(-3, 10, 3, 10); // C=C (Ar)
+
+  // Atoms
+  push();
+  stroke(255, 255, 255);
+  strokeWeight(0.3);
   fill(255, 0, 0);
-  rectMode(CENTER);
-  rect(0, 0, moleculeWidth, moleculeHeight);
+  ellipse(-6, 15, 4); // oxygen
+  ellipse(6, 15, 4); // oxygen
+  fill(75, 75, 75);
+  ellipse(-6, 5, 4);
+  ellipse(-6, -5, 4); // side chain
+  ellipse(-3, 10, 4);
+  ellipse(3, 10, 4);
+  ellipse(6, 5, 4);
+  ellipse(-3, 0, 4);
+  ellipse(3, 0, 4);
+  ellipse(-3, -10, 4); // side chain
   fill(0, 0, 255);
-  ellipse(-4, -10, 4);
-  ellipse(-4, 10, 4);
+  ellipse(-6, -15, 4); // nitrogen
+  pop();
   pop();
 }
 
