@@ -4,14 +4,11 @@
 function setup() {
   let canvas = createCanvas(800, 600);
 
-  /* UN-COMMENT THIS LATER! */
-
   canvas.parent("mol-lander-game");
 
-  /* */
-
-  // The following 7 lines of code were adapted from https://chat.openai.com/share/b658d5de-9fcf-4f45-86b9-b2af2204eefe Accessed: 2024-02-14
   // Prevent default behavior for arrow keys
+  // The following 7 lines of code were adapted from https://chat.openai.com/share/b658d5de-9fcf-4f45-86b9-b2af2204eefe Accessed: 2024-02-14
+
   document.addEventListener("keydown", function (event) {
     if (
       ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)
@@ -22,16 +19,16 @@ function setup() {
 
   gameReset();
   /* UN-COMMENTIG THIS LINE AND COMMENTING THE ONE BELOW ALLOWS TO BLOCK THE START SCREEN - DELETE WHEN FINISHED WITH TESTING */
-  state = "game";
-  // state = "start";
+  // state = "game";
+  state = "start";
 }
 
 const moleculeWidth = 20;
 const moleculeHeight = 40;
 
 /* UN-COMMENTIG THIS LINE AND COMMENTING THE ONE BELOW ALLOWS TO BLOCK THE START SCREEN - DELETE WHEN FINISHED WITH TESTING */
-let state = "game";
-// let state = "start";
+// let state = "game";
+let state = "start";
 
 let gameTimer;
 let moleculeX;
@@ -40,6 +37,8 @@ let velocity;
 let acceleration;
 let rotation;
 let speed;
+let staticMolX;
+let staticMolY;
 
 // Start screen function
 function startScreen() {
@@ -92,10 +91,12 @@ function gameReset() {
   acceleration = 0.001;
   rotation = 0;
   speed = 0;
+  staticMolX = 120;
+  staticMolY = 320;
 
   /* COMMENT THIS OUT AND UN-COMMENT state = "start" in the mouseClicked() function IF YOU WHAT TO MAKE IT RETURN TO THE START SCREEN EACH TIME */
 
-  state = "game";
+  // state = "game";
 }
 
 // Initial and after the game player interaction function
@@ -107,7 +108,7 @@ function mouseClicked() {
 
     /* UN-COMMENT THIS OUT AND COMMENT state = "game" in the gameReset() function IF YOU WHAT TO MAKE IT RETURN TO THE START SCREEN EACH TIME */
 
-    // state = "start";
+    state = "start";
   }
 }
 
@@ -167,50 +168,54 @@ function presynapticNeuron() {
   ellipse(155, 230, 64);
   ellipse(120, 320, 64);
 
-  // static molecule
+  pop();
+}
+
+function staticMolecule(staticMolX, staticMolY) {
+  // Static molecule
   push();
   // stroke(255, 255, 255);
-  fill(25, 25, 25);
-  rectMode(CENTER);
-  rect(120, 320, moleculeWidth, moleculeHeight);
+  noStroke();
+  // fill(25, 25, 25);
+  // rectMode(CENTER);
+  // rect(staticMolX, staticMolY, moleculeWidth, moleculeHeight);
 
   // Bonds between the atoms
   stroke(255, 255, 255);
 
   strokeWeight(0.6);
-  line(120 - 6, 320 + 15, 120 - 3, 320 + 10); // C-O BOND
-  line(120 + 6, 320 + 15, 120 + 3, 320 + 10); // C-O BOND
-  line(120 - 3, 320 - 10, 120 - 6, 320 - 15); // C-N (side chain)
-  line(120 - 6, 320 - 5, 120 - 3, 320 - 10); // C-C (side chain)
-  line(120 - 6, 320 - 5, 120 - 3, 320, 4); // C-C (side chain - Ar)
-  line(120 - 6, 320 + 5, 120 - 3, 320 + 10); // C-C (Ar)
-  line(120 - 3, 320, 120 + 3, 320); // C-C (Ar)
-  line(120 + 3, 320 + 10, 120 + 6, 320 + 5); // C-C (Ar)
+  line(staticMolX - 6, staticMolY + 15, staticMolX - 3, staticMolY + 10); // C-O BOND
+  line(staticMolX + 6, staticMolY + 15, staticMolX + 3, staticMolY + 10); // C-O BOND
+  line(staticMolX - 3, staticMolY - 10, staticMolX - 6, staticMolY - 15); // C-N (side chain)
+  line(staticMolX - 6, staticMolY - 5, staticMolX - 3, staticMolY - 10); // C-C (side chain)
+  line(staticMolX - 6, staticMolY - 5, staticMolX - 3, staticMolY, 4); // C-C (side chain - Ar)
+  line(staticMolX - 6, staticMolY + 5, staticMolX - 3, staticMolY + 10); // C-C (Ar)
+  line(staticMolX - 3, staticMolY, staticMolX + 3, staticMolY); // C-C (Ar)
+  line(staticMolX + 3, staticMolY + 10, staticMolX + 6, staticMolY + 5); // C-C (Ar)
 
   strokeWeight(1.2);
-  line(120 - 6, 320 + 5, 120 - 3, 320); // C=C (Ar)
-  line(120 + 6, 320 + 5, 120 + 3, 320); // C=C (Ar)
-  line(120 - 3, 320 + 10, 120 + 3, 320 + 10); // C=C (Ar)
+  line(staticMolX - 6, staticMolY + 5, staticMolX - 3, staticMolY); // C=C (Ar)
+  line(staticMolX + 6, staticMolY + 5, staticMolX + 3, staticMolY); // C=C (Ar)
+  line(staticMolX - 3, staticMolY + 10, staticMolX + 3, staticMolY + 10); // C=C (Ar)
 
   // Atoms
   push();
   stroke(255, 255, 255);
   strokeWeight(0.3);
   fill(255, 0, 0);
-  ellipse(120 - 6, 320 + 15, 4); // oxygen
-  ellipse(120 + 6, 320 + 15, 4); // oxygen
+  ellipse(staticMolX - 6, staticMolY + 15, 4); // oxygen
+  ellipse(staticMolX + 6, staticMolY + 15, 4); // oxygen
   fill(75, 75, 75);
-  ellipse(120 - 6, 320 + 5, 4);
-  ellipse(120 - 6, 320 - 5, 4); // side chain
-  ellipse(120 - 3, 320 + 10, 4);
-  ellipse(120 + 3, 320 + 10, 4);
-  ellipse(120 + 6, 320 + 5, 4);
-  ellipse(120 - 3, 320, 4);
-  ellipse(120 + 3, 320, 4);
-  ellipse(120 - 3, 320 - 10, 4); // side chain
+  ellipse(staticMolX - 6, staticMolY + 5, 4);
+  ellipse(staticMolX - 6, staticMolY - 5, 4); // side chain
+  ellipse(staticMolX - 3, staticMolY + 10, 4);
+  ellipse(staticMolX + 3, staticMolY + 10, 4);
+  ellipse(staticMolX + 6, staticMolY + 5, 4);
+  ellipse(staticMolX - 3, staticMolY, 4);
+  ellipse(staticMolX + 3, staticMolY, 4);
+  ellipse(staticMolX - 3, staticMolY - 10, 4); // side chain
   fill(0, 0, 255);
-  ellipse(120 - 6, 320 - 15, 4); // nitrogen
-  pop();
+  ellipse(staticMolX - 6, staticMolY - 15, 4); // nitrogen
   pop();
   pop();
 }
@@ -319,7 +324,7 @@ function molecule(moleculeX, moleculeY, rotation) {
   push();
   translate(moleculeX, moleculeY);
   rotate(rotation);
-  scale(-1, -1); // Flip vertically around the shape's axis
+  scale(-1, -1); // Flip vertically and horizontally around the shape's axis
 
   // Molecule
   // stroke(255, 255, 255);
@@ -535,6 +540,7 @@ function draw() {
   } else if (state === "game") {
     surroundings();
     presynapticNeuron();
+    staticMolecule(staticMolX, staticMolY);
     postsynapticNeuron();
     receptor1();
     receptor2();
@@ -545,9 +551,35 @@ function draw() {
     velocity += acceleration;
 
     /* This limits the movement of the molecule to the canvas area */
-    // The following 2 lines of code was adapted from https://www.geeksforgeeks.org/p5-js-constrain-function/Accessed: 2024-02-13
+    // The following 2 lines of code was adapted from https://www.geeksforgeeks.org/p5-js-constrain-function/ Accessed: 2024-02-13
     moleculeX = constrain(moleculeX, 0 + moleculeWidth, width - moleculeWidth);
     moleculeY = constrain(moleculeY, 0 + moleculeWidth, height - moleculeWidth);
+
+    // Movement of the molecule stuck inside of the synaptic vesicle
+    // The following 1 line of code with the frameCount with modulo operator trick to slow down the movement of only one thing in the animation was added by courtesy of Garrit Schaap
+    if (frameCount % 10 === 0) {
+      staticMovementX = Math.random() * 1 - 0.5;
+      // Correct formula = Math.random() * (0.5 - (-0.5)) + (-0.5);
+      staticMovementY = Math.random() * 1 + -0.5;
+      staticMolX += staticMovementX;
+      staticMolY += staticMovementY;
+    }
+
+    // The movement should be within this ellipse:
+    // ellipse(120, 320, 64);
+    // For simplification (because of the constrain() function limitations) a square inscribed in this ellipse (circle) was used:
+    // rect(120 - 64 / Math.sqrt(2), 320 - 64 / Math.sqrt(2), 64 / Math.sqrt(2));
+
+    staticMolX = constrain(
+      staticMolX,
+      120 - 64 / Math.sqrt(2),
+      120 + 64 / Math.sqrt(2)
+    );
+    staticMolY = constrain(
+      staticMolY,
+      320 - 64 / Math.sqrt(2),
+      320 + 64 / Math.sqrt(2)
+    );
 
     if (keyIsDown(38)) {
       // Move toward the postsynaptic neuron when the arrow UP is pressed
